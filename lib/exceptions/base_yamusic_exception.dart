@@ -1,0 +1,1 @@
+class BaseYamusicException implements Exception{}
