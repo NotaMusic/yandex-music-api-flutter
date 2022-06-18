@@ -19,6 +19,9 @@ class Track with _$Track {
     String? albumId,
     String? coverUri,
     List<Artist>? artists,
+    @Default(false) bool explicit,
+    //for podcasts
+    String? shortDescription, 
   }) = _Track;
 
   String? getCoverImage({String size = '200x200', int index = 0}) {

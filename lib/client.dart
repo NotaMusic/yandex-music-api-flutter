@@ -3,6 +3,7 @@ import 'dart:convert' show utf8;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
+import 'package:yandex_music_api_flutter/account/status.dart';
 import 'package:yandex_music_api_flutter/dio_music_interceptor.dart';
 import 'package:yandex_music_api_flutter/playlist/playlist.dart';
 import 'package:yandex_music_api_flutter/rotor/station_feedback.dart';
@@ -58,6 +59,31 @@ class Client {
     }
     _instanceRef = this;
   }
+
+  Future<Status> getAccountStatus() async {
+    final resp = await _client.get('$baseUrl/account/status');
+    return Status.fromJson(resp.data);
+  }
+
+//  @log
+//     def account_status(self, timeout: Union[int, float] = None, *args, **kwargs) -> Optional[Status]:
+//         """Получение статуса аккаунта. Нет обязательных параметров.
+//         Args:
+//             timeout (:obj:`int` | :obj:`float`, optional): Если это значение указано, используется как время ожидания
+//                 ответа от сервера вместо указанного при создании пула.
+//             **kwargs (:obj:`dict`, optional): Произвольные аргументы (будут переданы в запрос).
+//         Returns:
+//             :obj:`yandex_music.Status` | :obj:`None`: Информация об аккаунте если он валиден, иначе :obj:`None`.
+//         Raises:
+//             :class:`yandex_music.exceptions.YandexMusicError`: Базовое исключение библиотеки.
+//         """
+
+//         url = f'{self.base_url}/account/status'
+
+//         result = self._request.get(url, timeout=timeout, *args, **kwargs)
+
+//         return Status.de_json(result, self)
+
 /*
   Future<String> fromCredential(
     String login,
