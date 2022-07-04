@@ -22,8 +22,8 @@ class Station with _$Station {
 
   String get stationStringId => "${id.type}:${id.tag}";
 
-  Future<StationTracksResult?> getTracksRes() =>
-      Client.instance.getRotorStationTracks(station: stationStringId);
+  Future<StationTracksResult?> getTracksRes({String? queue}) =>
+      Client.instance.getRotorStationTracks(station: stationStringId, queue: queue);
 
   String? getCoverImage({String size = '200x200', int index = 0}) {
     return fullImageUrl == null ? null : 'https://${fullImageUrl!.replaceAll("%%", size)}';
