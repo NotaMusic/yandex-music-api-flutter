@@ -63,7 +63,12 @@ class Client {
 
   Future<Status> getAccountStatus() async {
     final resp = await _client.get('$baseUrl/account/status');
-    return Status.fromJson(resp.data);
+    return Status.fromJson(resp.data['result']);
+  }
+
+  Future<Status> getAccountRotorStatus() async {
+    final resp = await _client.get('$baseUrl/rotor/account/status');
+    return Status.fromJson(resp.data['result']);
   }
 
 //  @log
@@ -248,7 +253,6 @@ class Client {
     _client.interceptors.add(DioMusicInterceptor(token: token));
   }
 
-
   /*
   Отправка ответной реакции на происходящее при прослушивании радио.
         Note:
@@ -400,5 +404,11 @@ class Client {
     });
 
     return StationTracksResult.fromJson(resp.data['result']);
+  }
+
+  ///Получение списка плейлистов пользователя.
+  Future<List<Playlist>?> usersPlaylistsList(String userId) async {
+    final resp = await _client.get('$baseUrl/users/$userId/playlists/list');
+    return (resp.data['result'] as List).map((e) => Playlist.fromJson(e)).toList();
   }
 }

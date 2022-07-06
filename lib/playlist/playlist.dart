@@ -30,10 +30,15 @@ class Playlist with _$Playlist {
 
     ///Обложка
     String? image,
+
     // треки
     List<TrackShort>? tracks,
 // tracks (:obj:`list` из :obj:`yandex_music.TrackShort`, optional): Список треков.
   }) = _Playlist;
+
+  String? getCoverImage({String size = '200x200', int index = 0}) {
+     return cover?.getDownloadUrl(size: size, index: index);
+  }
 
   factory Playlist.fromJson(Map<String, Object?> json) =>
       _$PlaylistFromJson(json);

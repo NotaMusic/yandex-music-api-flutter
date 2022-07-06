@@ -20,6 +20,7 @@ class Track with _$Track {
     String? coverUri,
     List<Artist>? artists,
     @Default(false) bool explicit,
+    @Default(false) bool best,
     //for podcasts
     String? shortDescription, 
   }) = _Track;
