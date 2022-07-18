@@ -3,11 +3,6 @@ import 'dart:convert' show utf8;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
-import 'package:yandex_music_api_flutter/account/status.dart';
-import 'package:yandex_music_api_flutter/dio_music_interceptor.dart';
-import 'package:yandex_music_api_flutter/playlist/playlist.dart';
-import 'package:yandex_music_api_flutter/rotor/station_feedback.dart';
-import 'package:yandex_music_api_flutter/rotor/station_tracks_result.dart';
 import 'package:yandex_music_api_flutter/yandex_music_api_flutter.dart';
 
 typedef CaptchaCallback = Future<String> Function(String);
@@ -19,8 +14,7 @@ class Client {
   static const String defaultClientSecret = '53bc75238f0c4d08a118e51fe9203300';
 
   //https://oauth.yandex.ru/authorize?response_type=token&client_id=23cabbbdc6cd418abb4b39c32c41195d
-  static const String authSdkParams =
-      'app_id=ru.yandex.mobile.music&app_version_name=5.18&app_platform=iPad';
+  static const String authSdkParams = 'app_id=ru.yandex.mobile.music&app_version_name=5.18&app_platform=iPad';
 
   final String baseUrl;
   final String oAuthUrl;
@@ -248,8 +242,7 @@ class Client {
 
   void setTokenForClient(String token) {
     this.token = token;
-    _client.interceptors
-        .removeWhere((element) => element is DioMusicInterceptor);
+    _client.interceptors.removeWhere((element) => element is DioMusicInterceptor);
     _client.interceptors.add(DioMusicInterceptor(token: token));
   }
 
@@ -280,8 +273,7 @@ class Client {
     String? trackId,
   }) async {
     // ignore: no_leading_underscores_for_local_identifiers
-    var _timestamp =
-        (timestamp ?? DateTime.now()).millisecondsSinceEpoch.toString();
+    var _timestamp = (timestamp ?? DateTime.now()).millisecondsSinceEpoch.toString();
     final data = {
       'timestamp':
           "${_timestamp.substring(0, _timestamp.length - 5)}.${_timestamp.substring(_timestamp.length - 4, _timestamp.length)}",
@@ -326,8 +318,7 @@ class Client {
   }
 
   ///получение пользовательско плейлиста[ов]
-  Future<List<Playlist>?> getUsersPlaylist(
-      {required String userId, String? kind}) async {
+  Future<List<Playlist>?> getUsersPlaylist({required String userId, String? kind}) async {
     String url;
     if (kind != null) {
       url = '$baseUrl/users/$userId/playlists/$kind';
@@ -367,15 +358,12 @@ class Client {
     return 'https://$host/get-mp3/$sign/$ts$path';
   }
 
-  Future<List<StationResult>?> getRotorStationList(
-      {String language = 'ru'}) async {
+  Future<List<StationResult>?> getRotorStationList({String language = 'ru'}) async {
     final resp = await _client.get(
       '$baseUrl/rotor/stations/list',
       queryParameters: {'language': language},
     );
-    return (resp.data['result'] as List)
-        .map((e) => StationResult.fromJson(e))
-        .toList();
+    return (resp.data['result'] as List).map((e) => StationResult.fromJson(e)).toList();
   }
 
   ///Получение цепочки треков определённой станции.
@@ -397,8 +385,7 @@ class Client {
     required String station,
     String? queue,
   }) async {
-    final resp = await _client
-        .get('$baseUrl/rotor/station/$station/tracks', queryParameters: {
+    final resp = await _client.get('$baseUrl/rotor/station/$station/tracks', queryParameters: {
       'settings2': true,
       if (queue != null) 'queue': queue,
     });
@@ -411,4 +398,18 @@ class Client {
     final resp = await _client.get('$baseUrl/users/$userId/playlists/list');
     return (resp.data['result'] as List).map((e) => Playlist.fromJson(e)).toList();
   }
+
+
+  Future<List<Like>> getLikes({
+    required LikeType type,
+    required String userId,
+  }) async {
+    final resp = await _client.get("$baseUrl/users/$userId/likes/${type.name}s");
+    //TODO  if object_type == 'track':
+            // return TracksList.de_json(result.get('library'), self)
+    return (resp.data as List).map((e) => Like.fromJson(e)).toList();
+  }
+
+ 
+
 }
