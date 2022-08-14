@@ -13,8 +13,8 @@ class TrackShort with _$TrackShort {
   const factory TrackShort({
     required int id,
     required String timestamp,
-    String? albumId,
-    required Track track,
+    int? albumId,
+    Track? track,
   }) = _TrackShort;
 
   ///Уникальный идентификатор трека состоящий из его номера и номера альбома или просто из номера.
@@ -25,7 +25,7 @@ class TrackShort with _$TrackShort {
     return id.toString();
   }
 
-  Future<String?> getDownloadUrl() => track.getDownloadUrl();
+  Future<String?>? getDownloadUrl() => track?.getDownloadUrl();
 
   factory TrackShort.fromJson(Map<String, dynamic> json) =>
       _$TrackShortFromJson(json);

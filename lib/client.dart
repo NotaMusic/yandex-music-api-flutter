@@ -3,6 +3,8 @@ import 'dart:convert' show utf8;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
+import 'package:yandex_music_api_flutter/track/track.dart';
+import 'package:yandex_music_api_flutter/track/track_short.dart';
 import 'package:yandex_music_api_flutter/yandex_music_api_flutter.dart';
 
 typedef CaptchaCallback = Future<String> Function(String);
@@ -394,11 +396,54 @@ class Client {
   }
 
   ///Получение списка плейлистов пользователя.
-  Future<List<Playlist>?> usersPlaylistsList(String userId) async {
-    final resp = await _client.get('$baseUrl/users/$userId/playlists/list');
+  Future<List<Playlist>?> usersPlaylistsList(
+    String userId, {
+    List<String>? kind,
+  }) async {
+    if (kind == null) {
+      final resp = await _client.get('$baseUrl/users/$userId/playlists/list');
+      return (resp.data['result'] as List).map((e) => Playlist.fromJson(e)).toList();
+    } else {
+      final resp = await _client.post(
+        '$baseUrl/users/$userId/playlists',
+        data: {'kinds': kind},
+        options: Options(
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
+      return (resp.data['result'] as List).map((e) => Playlist.fromJson(e)).toList();
+    }
+  }
+
+  Future<List<Playlist>?> playlistList(List<String> playlistsId) async {
+    final resp = await _client.post(
+      "$baseUrl/playlists/list",
+      data: {
+        'playlistIds': playlistsId,
+        'playlist-ids': playlistsId,
+      },
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
     return (resp.data['result'] as List).map((e) => Playlist.fromJson(e)).toList();
   }
 
+  Future<List<Track>> tracksList(List<String> tracksId) async {
+    final resp = await _client.post(
+      "$baseUrl/tracks",
+      data: {
+        'trackIds': tracksId,
+        'track-ids': tracksId,
+      },
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
+    return (resp.data['result'] as List).map((e) => Track.fromJson(e)).toList();
+  }
 
   Future<List<Like>> getLikes({
     required LikeType type,
@@ -406,10 +451,7 @@ class Client {
   }) async {
     final resp = await _client.get("$baseUrl/users/$userId/likes/${type.name}s");
     //TODO  if object_type == 'track':
-            // return TracksList.de_json(result.get('library'), self)
-    return (resp.data as List).map((e) => Like.fromJson(e)).toList();
+    // return TracksList.de_json(result.get('library'), self)
+    return (resp.data['result'] as List).map((e) => Like.fromJson(e)).toList();
   }
-
- 
-
 }

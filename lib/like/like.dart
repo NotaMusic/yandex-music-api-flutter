@@ -28,7 +28,7 @@ abstract class Like with _$Like {
 */
 
   factory Like({
-    required LikeType type,
+    // required LikeType type,
     String? id,
     String? timestamp,
     // Album? album,
@@ -36,7 +36,6 @@ abstract class Like with _$Like {
     Playlist? playlist,
     String? shortDescription,
     String? description,
-    bool? isPremiere,
     bool? isBanner,
   }) = _Like;
   
