@@ -3,6 +3,8 @@ import 'dart:convert' show utf8;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
+import 'package:yandex_music_api_flutter/search/search_data.dart';
+import 'package:yandex_music_api_flutter/search/search_req_arg.dart';
 import 'package:yandex_music_api_flutter/track/track.dart';
 import 'package:yandex_music_api_flutter/track/track_short.dart';
 import 'package:yandex_music_api_flutter/yandex_music_api_flutter.dart';
@@ -453,5 +455,14 @@ class Client {
     //TODO  if object_type == 'track':
     // return TracksList.de_json(result.get('library'), self)
     return (resp.data['result'] as List).map((e) => Like.fromJson(e)).toList();
+  }
+
+  Future<SearchData?> search(SearchReqArg arg) async {
+    final resp = await _client.get("$baseUrl/search", queryParameters: arg.toJson());
+    if (resp.statusCode == 200) {
+      return SearchData.fromJson(resp.data['result']);
+    } else {
+      return null;
+    }
   }
 }
