@@ -62,13 +62,18 @@ part 'album.g.dart';
 
 @freezed
 abstract class Album with _$Album {
+  const Album._();
   factory Album({
-    String? id,
+    int? id,
     String? error,
     String? title,
     int? trackCount,
     String? coverUri,
   }) = _Album;
+
+  String? getCoverImage({String size = '200x200', int index = 0}) {
+    return coverUri == null ? null : 'https://${coverUri!.replaceAll("%%", size)}';
+  }
 
   factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
 }

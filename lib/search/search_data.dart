@@ -3,7 +3,7 @@ import 'package:yandex_music_api_flutter/search/best_search.dart';
 import 'package:yandex_music_api_flutter/search/search_result_data.dart';
 
 part 'search_data.freezed.dart';
-part 'search_data.g.dart';
+// part 'search_data.g.dart';
 
 /// Attributes:
 ///        search_request_id (:obj:`str`): ID запроса.
@@ -25,9 +25,11 @@ part 'search_data.g.dart';
 ///        misspell_corrected (:obj:`bool`, optional): Был ли исправлен запрос.
 ///        nocorrect (:obj:`bool`, optional): Было ли отключено исправление результата.
 ///        client (:obj:`yandex_music.Client`, optional): Клиент Yandex Music.
-@freezed
-abstract class SearchData with _$SearchData {
-  factory SearchData({
+@Freezed(fromJson: false)
+class SearchData with _$SearchData {
+  const SearchData._();
+
+  const factory SearchData({
     String? id,
     required String text,
     BestSearch? best,
@@ -44,8 +46,35 @@ abstract class SearchData with _$SearchData {
     int? perPage,
     String? misspellResult,
     String? misspellOriginal,
-    String? misspellCorrected,
+    bool? misspellCorrected,
     @Default(false) bool nocorrect,
   }) = _SearchData;
-  factory SearchData.fromJson(Map<String, dynamic> json) => _$SearchDataFromJson(json);
+
+  List<SearchResultData> notNullResults() {
+    return [
+      if (albums != null) albums!,
+      if (artists != null) artists!,
+      if (playlists != null) playlists!,
+      if (tracks != null) tracks!,
+    ];
+  }
+
+  factory SearchData.fromJson(Map<String, dynamic> json) {
+    return SearchData(
+      id: json['id'],
+      text: json['text'],
+      best: BestSearch.fromJson(json['best']),
+      albums: SearchResultData.fromJson(json['albums'], type: SearchResultType.album),
+      artists: SearchResultData.fromJson(json['artists'], type: SearchResultType.artist),
+      playlists: SearchResultData.fromJson(json['playlists'], type: SearchResultType.playlist),
+      tracks: SearchResultData.fromJson(json['tracks'], type: SearchResultType.track),
+      type: json['type'],
+      page: json['page'],
+      perPage: json['perPage'],
+      misspellResult: json['misspellResult'],
+      misspellOriginal: json['misspellOriginal'],
+      misspellCorrected: json['misspellCorrected'],
+      nocorrect: json['nocorrect'],
+    );
+  }
 }

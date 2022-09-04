@@ -48,7 +48,7 @@ class Playlist with _$Playlist {
       tracks: nTracks
           .map(
             (e) => TrackShort(
-                id: int.parse(e.id),
+                id: e.id,
                 timestamp: '',
                 albumId: e.albumId == null ? null : int.parse(e.albumId!),
                 track: e),

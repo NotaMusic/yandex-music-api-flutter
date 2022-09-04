@@ -14,7 +14,7 @@ class Track with _$Track {
   const Track._();
 
   const factory Track({
-    required String id,
+    required int id,
     required String title,
     String? albumId,
     String? coverUri,
@@ -30,7 +30,7 @@ class Track with _$Track {
   }
 
   Future<String?> getDownloadUrl() async{
-    final data = await Client.instance.getTrackDownloadInfo(id);
+    final data = await Client.instance.getTrackDownloadInfo(id.toString());
     if(data == null) return null;
     return Client.instance.getTrackDownloadUrl(data);
   }
