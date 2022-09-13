@@ -19,6 +19,7 @@ class Artist with _$Artist {
     @JsonKey(name: 'op_image') String? opImage,
   }) = _Artist;
 
+
   String? getCoverImage({String size = '200x200', int index = 0}) {
     return cover != null
         ? cover!.getDownloadUrl()

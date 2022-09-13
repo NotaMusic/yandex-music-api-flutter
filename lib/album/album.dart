@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:yandex_music_api_flutter/playlist/playlist.dart';
+import 'package:yandex_music_api_flutter/track/track.dart';
 
 part 'album.freezed.dart';
 part 'album.g.dart';
@@ -69,11 +71,23 @@ abstract class Album with _$Album {
     String? title,
     int? trackCount,
     String? coverUri,
+    List<List<Track>>? volumes,
   }) = _Album;
+
+  List<Track>? get tracks => volumes?.expand((e) => e).toList();
 
   String? getCoverImage({String size = '200x200', int index = 0}) {
     return coverUri == null ? null : 'https://${coverUri!.replaceAll("%%", size)}';
   }
 
   factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+
+  Playlist toPlaylist() {
+    return Playlist(
+      title: title,
+      tracks: tracks?.map((e) => e.toShortTrack()).toList(),
+      trackCount: tracks?.length,
+      image: coverUri,
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:convert' show utf8;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
+import 'package:yandex_music_api_flutter/album/album.dart';
 import 'package:yandex_music_api_flutter/search/search_data.dart';
 import 'package:yandex_music_api_flutter/search/search_req_arg.dart';
 import 'package:yandex_music_api_flutter/track/track.dart';
@@ -261,5 +262,32 @@ class Client {
     } else {
       return null;
     }
+  }
+
+  //  @log
+  // def albums_with_tracks(
+  //     self, album_id: Union[str, int], timeout: Union[int, float] = None, *args, **kwargs
+  // ) -> Optional[Album]:
+  //     """Получение альбома по его уникальному идентификатору вместе с треками.
+  //     Args:
+  //         album_id (:obj:`str` | :obj:`int`): Уникальный идентификатор альбома.
+  //         timeout (:obj:`int` | :obj:`float`, optional): Если это значение указано, используется как время ожидания
+  //             ответа от сервера вместо указанного при создании пула.
+  //         **kwargs (:obj:`dict`, optional): Произвольные аргументы (будут переданы в запрос).
+  //     Returns:
+  //         :obj:`list` из :obj:`yandex_music.Album` | :obj:`None`: Альбом или :obj:`None`.
+  //     Raises:
+  //         :class:`yandex_music.exceptions.YandexMusicError`: Базовое исключение библиотеки.
+  //     """
+
+  //     url = f'{self.base_url}/albums/{album_id}/with-tracks'
+
+  //     result = self._request.get(url, timeout=timeout, *args, **kwargs)
+
+  //     return Album.de_json(result, self)
+
+  Future<Album> getAlbumWithTracks(String albumId) async {
+    final resp = await _client.get('$baseUrl/albums/$albumId/with-tracks');
+    return Album.fromJson(resp.data['result']);
   }
 }
